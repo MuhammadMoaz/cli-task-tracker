@@ -10,6 +10,7 @@ def add_task(task_name):
     print(f"Task Added Successfully (ID: {id}, Name: {task_name})")
 
 def main():
+    print("HI!")
     while True:
         # Get input
         command = input('task-cli:')
