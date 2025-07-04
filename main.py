@@ -1,17 +1,18 @@
-def add_task():
+def add_task(task_name):
     # open JSON for writing
     # assign ID to task
     # store task and relevant details to JSON
     # output confirmation
-    print("Task Added Successfully (ID: {id})")
+    id = 1
+    print("Task Added Successfully (ID: {id}, Name: {task_name})")
 
 
 while True:
-    input = input('task-cli:')
-    command, parameter = input.split(' ')
+    command = input('task-cli:')
+    operation, parameter = command.split(' ')
     match command:
         case "add":
-            add_task()
+            add_task(parameter)
         case "update":
             print("task update")
         case "delete":
