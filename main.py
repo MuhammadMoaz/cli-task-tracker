@@ -1,5 +1,6 @@
 import json
-import re
+import shlex
+import uuid
 
 def add_task(task_name):
     # open JSON for writing
@@ -8,30 +9,37 @@ def add_task(task_name):
     # output confirmation
     id = 1
     print(f"Task Added Successfully (ID: {id}, Name: {task_name})")
+    id += 1
+
+def parse_input(user_input):
+    command = shlex.split(user_input)
+    print(command)
+    print(len(command))
+
+    match command[0]:
+        case "add":
+            if len(command) == 2:
+                add_task(command[1])
+            else:
+                print("Invalid Input")
+        case "update":
+            print("task update")
+        case "delete":
+            print("task deleted")
+        case "mark-in-progress":
+            print("task marked as in progress")
+        case "mark-done":
+            print("task marked as done")
+        case "list":
+            print("listing tasks")
+        case "quit":
+            print("quitting...")
+            exit()
 
 def main():
     while True:
         # Get input
-        command = input('task-cli:')
-        # Get operation from input
-        operation = command.split('"')
-        print(operation)
-        # Match command using regex
-        match operation[0].strip():
-            case "add":
-                add_task(operation[1])
-            case "update":
-                print("task update")
-            case "delete":
-                print("task deleted")
-            case "mark-in-progress":
-                print("task marked as in progress")
-            case "mark-done":
-                print("task marked as done")
-            case "list":
-                print("listing tasks")
-            case "quit":
-                print("quitting...")
-                exit()
+        user_input = input('task-cli:')
+        parse_input(user_input)
 
 main()
