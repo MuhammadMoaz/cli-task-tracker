@@ -1,15 +1,56 @@
 import json
 import shlex
 import uuid
+import datetime
+
+def init_json():
+    dict = {
+        "tasks": [
+
+        ]
+    }
+
+    with open("tasks.json", "w") as file:
+        json.dump(dict, file, indent=4)
+
+def update_json(new_data, filename="tasks.json"):
+    # Read JSON and store in dictionary
+    with open(filename, "r+") as file:
+        file_data = json.load(file)
+        print(type(file_data))
+        # Add new data to dictionary
+        file_data["tasks"].append(new_data)
+        print(file_data)
+        file.seek(0)
+        # Write updated JSON back to the JSON file
+        json.dump(file_data, file, indent=4)
+
 
 def add_task(task_name):
-    # open JSON for writing
-    # assign ID to task
-    # store task and relevant details to JSON
-    # output confirmation
-    id = 1
-    print(f"Task Added Successfully (ID: {id}, Name: {task_name})")
-    id += 1
+    # Generate ID
+    task_id = 0
+
+    # Get current date and time
+    datetime_now = datetime.datetime.now()
+    created_at = datetime_now.strftime("%Y-%m-%d %H:%M:%S")
+
+    # Create dict of the task and it's properties
+    task_dict = {
+        "id": task_id,
+        "description": task_name,
+        "status": "todo",
+        "createdAt": created_at,
+        "updatedAt": created_at 
+    }
+
+    # Serializing json
+    json_obj = json.dumps(task_dict)
+
+    # Update JSON file
+    update_json(json_obj)
+
+    # Output confirmation
+    print(f"Task Added Successfully (ID: {task_id}, Name: {task_name})")
 
 def parse_input(user_input):
     command = shlex.split(user_input)
@@ -37,6 +78,8 @@ def parse_input(user_input):
             exit()
 
 def main():
+    init_json()
+    
     while True:
         # Get input
         user_input = input('task-cli:')
