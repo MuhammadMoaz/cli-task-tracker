@@ -25,10 +25,20 @@ def update_json(new_data, filename="tasks.json"):
         # Write updated JSON back to the JSON file
         json.dump(file_data, file, indent=4)
 
+def generate_id():
+    # Open JSNB for reading
+    with open("tasks.json", "r") as file:
+        # Read JSON
+        file_data = json.load(file)
+        # Get the number of tasks stored in the JSON 
+        id = len(file_data["tasks"]) + 1
+        # Return id
+        return id
+
 
 def add_task(task_name):
-    # Generate ID
-    task_id = 0
+    # Generate task ID
+    task_id = generate_id()
 
     # Get current date and time
     datetime_now = datetime.datetime.now()
