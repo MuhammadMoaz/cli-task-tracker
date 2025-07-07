@@ -10,6 +10,7 @@ def init_json():
         ]
     }
 
+    # Read JSON for writing
     with open("tasks.json", "w") as file:
         json.dump(dict, file, indent=4)
 
@@ -17,10 +18,8 @@ def update_json(new_data, filename="tasks.json"):
     # Read JSON and store in dictionary
     with open(filename, "r+") as file:
         file_data = json.load(file)
-        print(type(file_data))
         # Add new data to dictionary
         file_data["tasks"].append(new_data)
-        print(file_data)
         file.seek(0)
         # Write updated JSON back to the JSON file
         json.dump(file_data, file, indent=4)
@@ -35,13 +34,13 @@ def generate_id():
         # Return id
         return id
 
-
 def add_task(task_name):
     # Generate task ID
     task_id = generate_id()
 
     # Get current date and time
     datetime_now = datetime.datetime.now()
+    # Convert to string
     created_at = datetime_now.strftime("%Y-%m-%d %H:%M:%S")
 
     # Create dict of the task and it's properties
@@ -55,17 +54,16 @@ def add_task(task_name):
 
     # Serializing json
     json_obj = json.dumps(task_dict)
-
     # Update JSON file
     update_json(json_obj)
-
     # Output confirmation
     print(f"Task Added Successfully (ID: {task_id}, Name: {task_name})")
 
+def update_task(task_id, task_name):
+    print()
+
 def parse_input(user_input):
     command = shlex.split(user_input)
-    print(command)
-    print(len(command))
 
     match command[0]:
         case "add":
@@ -95,4 +93,5 @@ def main():
         user_input = input('task-cli:')
         parse_input(user_input)
 
-main()
+if __name__ == "__main__":
+    main()
