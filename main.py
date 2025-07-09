@@ -1,6 +1,5 @@
 import json
 import shlex
-import uuid
 import datetime
 
 def init_json():
@@ -13,16 +12,6 @@ def init_json():
     # Read JSON for writing
     with open("tasks.json", "w") as file:
         json.dump(dict, file, indent=4)
-
-def update_json(new_data, filename="tasks.json"):
-    # Read JSON and store in dictionary
-    with open(filename, "r+") as file:
-        file_data = json.load(file)
-        # Add new data to dictionary
-        file_data["tasks"].append(new_data)
-        file.seek(0)
-        # Write updated JSON back to the JSON file
-        json.dump(file_data, file, indent=4)
 
 def generate_id():
     # Open JSNB for reading
@@ -54,13 +43,43 @@ def add_task(task_name):
 
     # Serializing json
     json_obj = json.dumps(task_dict)
-    # Update JSON file
-    update_json(json_obj)
+
+    # Read JSON and store in dictionary
+    with open("tasks.json", "r+") as file:
+        file_data = json.load(file)
+        # Add new data to dictionary
+        file_data["tasks"].append(json_obj)
+        file.seek(0)
+        # Write updated JSON back to the JSON file
+        json.dump(file_data, file, indent=4)
+
     # Output confirmation
     print(f"Task Added Successfully (ID: {task_id}, Name: {task_name})")
 
-def update_task(task_id, task_name):
-    print()
+def update_task(task_id, new_desc):
+    # Read JSON
+    with open("tasks.json", "r+") as file:
+        # Store in dictionary
+        file_data = json.load(file)
+        task_data = file_data["tasks"][int(task_id)-1]
+        
+        # Deserializing JSON
+        task_data = json.loads(task_data)
+
+        # Updating task
+        task_data["description"] = new_desc
+
+        file.seek(0)
+
+        # Serializing JSON
+        task_data = json.dumps(task_data)
+        file_data = task_data
+        print(file_data)
+        
+        
+    
+    # Write JSON
+    
 
 def parse_input(user_input):
     command = shlex.split(user_input)
@@ -72,7 +91,10 @@ def parse_input(user_input):
             else:
                 print("Invalid Input")
         case "update":
-            print("task update")
+            if len(command) == 3:
+                update_task(command[1], command[2])
+            else:
+                print("Invalid Input")
         case "delete":
             print("task deleted")
         case "mark-in-progress":
