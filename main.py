@@ -29,6 +29,7 @@ def add_task(task_name):
 
     # Get current date and time
     datetime_now = datetime.datetime.now()
+    
     # Convert to string
     created_at = datetime_now.strftime("%Y-%m-%d %H:%M:%S")
 
@@ -41,14 +42,11 @@ def add_task(task_name):
         "updatedAt": created_at 
     }
 
-    # Serializing json
-    json_obj = json.dumps(task_dict)
-
     # Read JSON and store in dictionary
     with open("tasks.json", "r+") as file:
         file_data = json.load(file)
         # Add new data to dictionary
-        file_data["tasks"].append(json_obj)
+        file_data["tasks"].append(task_dict)
         file.seek(0)
         # Write updated JSON back to the JSON file
         json.dump(file_data, file, indent=4)
@@ -59,28 +57,19 @@ def add_task(task_name):
 def update_task(task_id, new_desc):
     # Read JSON
     with open("tasks.json", "r+") as file:
-        # Store in dictionary
+        # Load JSON data
         file_data = json.load(file)
-        task_data = file_data["tasks"][int(task_id)-1]
-        
-        # Deserializing JSON
-        task_data = json.loads(task_data)
 
-        # Updating task
-        task_data["description"] = new_desc
+        # Get task and update description
+        task_index = int(task_id) - 1
+        file_data["tasks"][task_index]["description"] = new_desc
 
         file.seek(0)
+        file.truncate()
 
-        # Serializing JSON
-        task_data = json.dumps(task_data)
-        file_data = task_data
-        print(file_data)
-        
-        
+        # Write updated task back to JSON file
+        json.dump(file_data, file, indent=4)
     
-    # Write JSON
-    
-
 def parse_input(user_input):
     command = shlex.split(user_input)
 
