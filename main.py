@@ -60,16 +60,43 @@ def update_task(task_id, new_desc):
         # Load JSON data
         file_data = json.load(file)
 
-        # Get task and update description
-        task_index = int(task_id) - 1
-        file_data["tasks"][task_index]["description"] = new_desc
+        
+        # Find the task by task_id
+        for task in file_data["tasks"]:
+            if str(task["id"]) == str(task_id):
+                # Update task description
+                task["description"] = new_desc
+                break
+        else:
+            print(f"Task with id {task_id} not found.")
 
         file.seek(0)
         file.truncate()
 
         # Write updated task back to JSON file
         json.dump(file_data, file, indent=4)
-    
+
+def delete_task(task_id):
+    # Read JSON
+    with open("tasks.json", "r+") as file:
+        # Load JSON data
+        file_data =  json.load(file)
+
+        # Find the task by task_id
+        for task in file_data["tasks"]:
+            if str(task["id"]) == str(task_id):
+                # Delete task
+                file_data["tasks"].remove(task) 
+                break
+        else:
+            print(f"Task with id {task_id} not found.")
+       
+        file.seek(0)
+        file.truncate()
+
+        # Write updated JSON back to file
+        json.dump(file_data, file, indent=4)
+
 def parse_input(user_input):
     command = shlex.split(user_input)
 
@@ -85,7 +112,10 @@ def parse_input(user_input):
             else:
                 print("Invalid Input")
         case "delete":
-            print("task deleted")
+            if len(command) == 2:
+                delete_task(command[1])
+            else:
+                print("Invlaid Input")
         case "mark-in-progress":
             print("task marked as in progress")
         case "mark-done":
