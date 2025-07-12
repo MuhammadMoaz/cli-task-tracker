@@ -4,6 +4,7 @@ import datetime
 
 def init_json():
     dict = {
+        "last_id": 0,
         "tasks": [
 
         ]
@@ -18,8 +19,14 @@ def generate_id():
     with open("tasks.json", "r") as file:
         # Read JSON
         file_data = json.load(file)
-        # Get the number of tasks stored in the JSON 
-        id = len(file_data["tasks"]) + 1
+
+        # Increment last_id counter
+        file_data["last_id"] += 1
+        id = file_data["last_id"]
+
+        with open("tasks.json", "w") as file:
+            json.dump(file_data, file, indent=2)
+
         # Return id
         return id
 
@@ -60,7 +67,6 @@ def update_task(task_id, new_desc):
         # Load JSON data
         file_data = json.load(file)
 
-        
         # Find the task by task_id
         for task in file_data["tasks"]:
             if str(task["id"]) == str(task_id):
@@ -139,6 +145,29 @@ def mark_task_done(task_id):
         # Write update JSON back to file
         json.dump(file_data, file, indent=4)
 
+def list_tasks(task_status):
+    status_list = ["todo", "done", "in-progress"]
+    output_list = []
+
+    if (task_status) in status_list:
+        # Read JSON file
+        with open("tasks.json", "r+") as file:
+            # Load JSON data
+            file_data = json.load(file)
+
+            # Find the task by task_status
+            for task in file_data["tasks"]:
+                if task["status"] == task_status:
+                    # Store task in list
+                    output_list.append(task)
+                    break
+                else:
+                    print(f"Task with status {task_status} not found.")
+            
+            print(output_list)
+    else:
+        print(f"Invalid Status {task_status}")
+
 def parse_input(user_input):
     command = shlex.split(user_input)
 
@@ -157,7 +186,7 @@ def parse_input(user_input):
             if len(command) == 2:
                 delete_task(command[1])
             else:
-                print("Invlaid Input")
+                print("Invalid Input")
         case "mark-in-progress":
             if len(command) == 2:
                 mark_task_in_progress(command[1])
@@ -169,7 +198,10 @@ def parse_input(user_input):
             else:
                 print("Invalid Input")
         case "list":
-            print("listing tasks")
+            if len(command) == 2:
+                list_tasks(command[1])
+            else:
+                print("Invalid Input")
         case "quit":
             print("quitting...")
             exit()
