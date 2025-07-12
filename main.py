@@ -67,8 +67,8 @@ def update_task(task_id, new_desc):
                 # Update task description
                 task["description"] = new_desc
                 break
-        else:
-            print(f"Task with id {task_id} not found.")
+            else:
+                print(f"Task with id {task_id} not found.")
 
         file.seek(0)
         file.truncate()
@@ -88,13 +88,55 @@ def delete_task(task_id):
                 # Delete task
                 file_data["tasks"].remove(task) 
                 break
-        else:
-            print(f"Task with id {task_id} not found.")
+            else:
+                print(f"Task with id {task_id} not found.")
        
         file.seek(0)
         file.truncate()
 
         # Write updated JSON back to file
+        json.dump(file_data, file, indent=4)
+
+def mark_task_in_progress(task_id):
+    # Read JSON file
+    with open("tasks.json", "r+") as file:
+        # Load JSON data
+        file_data = json.load(file)
+
+        # Find the task by task_id
+        for task in file_data["tasks"]:
+            if str(task["id"]) == str(task_id):
+                # Update task status
+                task["status"] = "in-progress"
+                break
+            else:
+                print(f"Task with id {task_id} not found.")
+
+        file.seek(0)
+        file.truncate()
+
+        # Write update JSON back to file
+        json.dump(file_data, file, indent=4)
+
+def mark_task_done(task_id):
+    # Read JSON file
+    with open("tasks.json", "r+") as file:
+        # Load JSON data
+        file_data = json.load(file)
+
+        # Find the task by task_id
+        for task in file_data["tasks"]:
+            if str(task["id"]) == str(task_id):
+                # Update task status
+                task["status"] = "done"
+                break
+            else:
+                print(f"Task with id {task_id} not found.")
+
+        file.seek(0)
+        file.truncate()
+
+        # Write update JSON back to file
         json.dump(file_data, file, indent=4)
 
 def parse_input(user_input):
@@ -117,9 +159,15 @@ def parse_input(user_input):
             else:
                 print("Invlaid Input")
         case "mark-in-progress":
-            print("task marked as in progress")
+            if len(command) == 2:
+                mark_task_in_progress(command[1])
+            else:
+                print("Invalid Input")
         case "mark-done":
-            print("task marked as done")
+            if len(command) == 2:
+                mark_task_done(command[1])
+            else:
+                print("Invalid Input")
         case "list":
             print("listing tasks")
         case "quit":
