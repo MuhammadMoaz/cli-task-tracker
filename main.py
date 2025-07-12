@@ -159,8 +159,7 @@ def list_tasks(task_status):
             for task in file_data["tasks"]:
                 if task["status"] == task_status:
                     # Store task in list
-                    output_list.append(task)
-                    break
+                    output_list.append(task["description"])
                 else:
                     print(f"Task with status {task_status} not found.")
             
