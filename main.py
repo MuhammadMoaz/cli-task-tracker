@@ -174,36 +174,26 @@ def parse_input(user_input):
         case "add":
             if len(command) == 2:
                 add_task(command[1])
-            else:
-                print("Invalid Input")
         case "update":
             if len(command) == 3:
                 update_task(command[1], command[2])
-            else:
-                print("Invalid Input")
         case "delete":
             if len(command) == 2:
                 delete_task(command[1])
-            else:
-                print("Invalid Input")
         case "mark-in-progress":
             if len(command) == 2:
                 mark_task_in_progress(command[1])
-            else:
-                print("Invalid Input")
         case "mark-done":
             if len(command) == 2:
                 mark_task_done(command[1])
-            else:
-                print("Invalid Input")
         case "list":
             if len(command) == 2:
                 list_tasks(command[1])
-            else:
-                print("Invalid Input")
         case "quit":
             print("quitting...")
             exit()
+        case _:
+            print("Invalid Input!")
 
 def main():
     init_json()
