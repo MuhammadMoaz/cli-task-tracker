@@ -73,8 +73,6 @@ def update_task(task_id, new_desc):
                 # Update task description
                 task["description"] = new_desc
                 break
-            else:
-                print(f"Task with id {task_id} not found.")
 
         file.seek(0)
         file.truncate()
@@ -94,8 +92,6 @@ def delete_task(task_id):
                 # Delete task
                 file_data["tasks"].remove(task) 
                 break
-            else:
-                print(f"Task with id {task_id} not found.")
        
         file.seek(0)
         file.truncate()
@@ -115,8 +111,6 @@ def mark_task_in_progress(task_id):
                 # Update task status
                 task["status"] = "in-progress"
                 break
-            else:
-                print(f"Task with id {task_id} not found.")
 
         file.seek(0)
         file.truncate()
@@ -136,8 +130,6 @@ def mark_task_done(task_id):
                 # Update task status
                 task["status"] = "done"
                 break
-            else:
-                print(f"Task with id {task_id} not found.")
 
         file.seek(0)
         file.truncate()
@@ -145,7 +137,7 @@ def mark_task_done(task_id):
         # Write update JSON back to file
         json.dump(file_data, file, indent=4)
 
-def list_tasks(task_status):
+def list_tasks(task_status=None):
     status_list = ["todo", "done", "in-progress"]
     output_list = []
 
@@ -162,6 +154,18 @@ def list_tasks(task_status):
                     output_list.append(task["description"])
                 else:
                     print(f"Task with status {task_status} not found.")
+            
+            print(output_list)
+    
+    elif task_status is None:
+        # Read JSON file
+        with open("tasks.json", "r+") as file:
+            # Load JSON data
+            file_data = json.load(file)
+
+            # Find all tasks
+            for task in file_data["tasks"]:
+                output_list.append(task["description"])
             
             print(output_list)
     else:
@@ -187,6 +191,8 @@ def parse_input(user_input):
             if len(command) == 2:
                 mark_task_done(command[1])
         case "list":
+            if len(command) == 1:
+                list_tasks()
             if len(command) == 2:
                 list_tasks(command[1])
         case "quit":
