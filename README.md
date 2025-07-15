@@ -10,3 +10,7 @@ This is my CLI task tracker designed to help you track and manage your tasks. To
 - list in-progress, to list all tasks in progress
 - list done, to list all tasks in progress
 - quit, to quit the program
+
+All tasks are stored in a JSON file called "tasks.json".
+
+Project URL: https://roadmap.sh/projects/task-tracker
